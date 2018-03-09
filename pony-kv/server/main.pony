@@ -52,8 +52,6 @@ actor Main
     let host = recover val cmd.option("host").string() end
     let port = recover val cmd.option("port").i64().string() end
 
-    env.out.print("listening on " + host + ":" + port)
-
     try
       TCPListener(
         env.root as AmbientAuth,
