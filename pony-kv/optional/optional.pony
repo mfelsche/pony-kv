@@ -42,6 +42,7 @@ primitive Opt
     (consume opt) as T
 
   fun iter[T](opt: Optional[T]): Iterator[T]^ =>
+    // TODO: use iftype
     match opt
     | let n: None =>
       object ref is Iterator[T]
