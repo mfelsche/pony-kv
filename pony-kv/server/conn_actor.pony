@@ -49,8 +49,8 @@ actor ConnActor
     get the value for k
 
     It is possible that this function is returning `None` to the callback `cb`
-    if the initial state has not yet been sent to this actor.
-    In this case retry.
+    if the key is not in the database
+    or if the initial state has not yet been sent to this actor.
     """
     let value_opt = Opt.flat_map[SEState, Array[U8] val](_state, {(s) => s.get(k)})
     cb(value_opt)
