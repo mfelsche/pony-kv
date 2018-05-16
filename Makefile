@@ -17,6 +17,9 @@ build/server/test: build $(SERVER_SOURCES) $(OPTIONAL_SOURCES) $(SERVER_TEST_SOU
 build/test: build $(SERVER_SOURCES) $(OPTIONAL_SOURCES) $(CLIENT_SOURCES) $(TEST_SOURCES)
 	stable env $(PONYC) pony-kv/test -o build -p pony-kv --debug
 
+deps:
+	stable fetch
+
 build:
 	mkdir build
 
@@ -27,4 +30,4 @@ test: build/test build/server/test
 clean:
 	rm -rf build
 
-.PHONY: clean test
+.PHONY: clean test deps
