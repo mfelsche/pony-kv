@@ -31,8 +31,8 @@ actor PersistentMapStorageEngine is StorageEngine
 
 primitive ByteArrayHashFunction is collections.HashFunction[Array[U8] val]
 
-  fun hash(x: box->Array[U8] val!): U64 =>
-    @ponyint_hash_block[U64](x.cpointer(), x.size())
+  fun hash(x: box->Array[U8] val!): USize =>
+    @ponyint_hash_block[USize](x.cpointer(), x.size())
 
   fun eq(x: box->Array[U8] val!, y: box->Array[U8] val!): Bool =>
     if x.size() != y.size() then
