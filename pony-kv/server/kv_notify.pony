@@ -92,8 +92,8 @@ class iso KVListenNotify is TCPListenNotify
   fun ref listening(listen: TCPListener ref) =>
     ifdef debug then
       let addr = listen.local_address()
-      let port: U16 = @ntohs[U16](addr.port)
-      let ip: U32 = @ntohl[U32](addr.addr)
+      let port: U16 = addr.port()
+      let ip: U32 = addr.ipv4_addr()
       _env.out.print("listening on " +
           (ip >> 24).u8().string() + "." +
           (ip >> 16).u8().string() + "." +
