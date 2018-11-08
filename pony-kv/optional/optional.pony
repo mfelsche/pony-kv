@@ -4,25 +4,25 @@ type Optional[T] is (T | None)
 primitive Opt
 
   fun get[T](opt: Optional[T], other: T): T =>
-    match opt
+    match consume opt
     | let n: None => consume other
     | let o: T => consume o
     end
 
   fun map[T, R](opt: Optional[T], operation: {(T): R}): Optional[R] =>
-    match opt
+    match consume opt
     | let n: None => None
     | let o: T => operation.apply(consume o)
     end
 
   fun flat_map[T, R](opt: Optional[T], operation: {(T): Optional[R]}): Optional[R] =>
-    match opt
+    match consume opt
     | let n: None => None
     | let o: T => operation.apply(consume o)
     end
 
   fun filter[T](opt: Optional[T], predicate: {(T): (Bool, T^)}): Optional[T] =>
-    match opt
+    match consume opt
     | let n: None => None
     | let o: T =>
       (let satisfied: Bool, let o2: T) = predicate.apply(consume o)
@@ -34,7 +34,7 @@ primitive Opt
     end
 
   fun apply[T](opt: Optional[T], operation: {(T): None}): None =>
-    match opt
+    match consume opt
     | let o: T => operation.apply(consume o)
     end
 
@@ -43,7 +43,7 @@ primitive Opt
 
   fun iter[T](opt: Optional[T]): Iterator[T]^ =>
     // TODO: use iftype
-    match opt
+    match consume opt
     | let n: None =>
       object ref is Iterator[T]
         fun ref has_next(): Bool => false
