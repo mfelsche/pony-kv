@@ -16,13 +16,16 @@ Each connections actor has a reference to the kv_engine, which is updated on eve
 
 use "cli"
 use "net"
+use single = "server/single"
+use shared_immutable = "server/shared-immutable"
+use multi = "server/multi"
 
 
 actor Main
   new create(env: Env) =>
     let cmd_spec =
       try
-        CommandSpec.leaf(
+        CommandSpec.parent(
           "pony-kv",
           "A simple Key Value Store - Server",
           [
@@ -30,7 +33,9 @@ actor Main
             OptionSpec.string("host", "hostname or IP address" where short' = 'h', default' = "127.0.0.1")
           ],
           [
-            ArgSpec.string("" where default' = "") // dummy
+            single.SingleCLI.command_spec()?
+            shared_immutable.SharedImmutableCLI.command_spec()?
+            multi.MultiCLI.command_spec()?
           ])? .> add_help()?
       else
         env.exitcode(1)
@@ -53,9 +58,25 @@ actor Main
     let port = recover val cmd.option("port").i64().string() end
 
     try
+      let listener =
+        match cmd.spec().name()
+        | single.SingleCLI.name() =>
+          env.out.print("starting single KV store")
+          single.SingleKVListener(env)
+        | shared_immutable.SharedImmutableCLI.name() =>
+          env.out.print("starting shared-immtable KV store")
+          shared_immutable.KVListenNotify(env)
+        | multi.MultiCLI.name() =>
+          env.out.print("starting multi KV store")
+          multi.MultiKVListener(env)
+        else
+          env.err.print("unknown kv store engine")
+          env.exitcode(1)
+          return
+        end
       TCPListener(
         env.root as AmbientAuth,
-        KVListenNotify(env),
+        consume listener,
         host,
         port
       )

@@ -3,6 +3,11 @@
     {
       "type": "github",
       "repo": "jemc/pony-resp"
+    },
+    {
+      "tag": "0.1.0",
+      "type": "github",
+      "repo": "mfelsche/pony-maybe"
     }
   ]
 }

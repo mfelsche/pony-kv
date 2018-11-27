@@ -74,7 +74,10 @@ class iso KVConnectionNotify is TCPConnectionNotify
 
   fun ref connect_failed(conn: TCPConnection ref) =>
     _env.err.print("connect failed")
+    _conn_actor.dispose()
 
+  fun ref closed(conn: TCPConnection ref) =>
+    _conn_actor.dispose()
 
 class iso KVListenNotify is TCPListenNotify
   let _env: Env
@@ -83,7 +86,7 @@ class iso KVListenNotify is TCPListenNotify
   new iso create(env: Env) =>
     _env = env
     // TODO: make storage engine configurable
-    _storage_engine = PersistentMapStorageEngine
+    _storage_engine = PersistentMapStorageEngine(1000)
 
   fun ref connected(listen: TCPListener ref): TCPConnectionNotify iso^ =>
     KVConnectionNotify(_env, _storage_engine)
