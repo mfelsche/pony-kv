@@ -22,6 +22,9 @@ deps:
 build:
 	mkdir build
 
+build/server: build
+	mkdir -p build/server
+
 test: build/test build/server/test
 	build/test
 	build/server/test
