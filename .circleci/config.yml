@@ -4,6 +4,8 @@ jobs:
     docker:
       - image: ponylang/ponyc:release
     steps:
+      - run: apt update
+      - run: apt install -y make
       - checkout
       - run: make deps
       - run: make test
@@ -11,6 +13,8 @@ jobs:
     docker:
       - image: ponylang/ponyc:latest
     steps:
+      - run: apt update
+      - run: apt install -y make
       - checkout
       - run: make deps
       - run: make test
